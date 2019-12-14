@@ -1,3 +1,6 @@
+// License GPL v3.0
+// by Davide Fassio
+
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>

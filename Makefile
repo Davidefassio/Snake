@@ -1,9 +1,9 @@
-// License GPL v3.0
-// by Davide Fassio
+# License GPL v3.0
+# by Davide Fassio
 
-all: tui
+all: Snake
 
 tui: main.cpp
-	g++ main.cpp -lncurses -o tui
-	./tui
+	g++ main.cpp -lncurses -o Snake
+	./Snake
 	clear

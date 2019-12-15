@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>
+#include "color.h"
 using namespace std;
 
 #define LEN 1000  // Max lenght of the snake
@@ -22,6 +23,16 @@ int main(int argc, char ** argv){
 	refresh();
 	curs_set(0);
 	halfdelay(1);
+
+	// Define all colors for the text
+	start_color();
+
+	init_pair(WALL, COLOR_WHITE , COLOR_BLACK);
+	init_pair(SB  , COLOR_BLUE  , COLOR_BLACK);
+	init_pair(SH  , COLOR_GREEN , COLOR_BLACK);
+	init_pair(FD  , COLOR_RED   , COLOR_BLACK);
+	init_pair(SCO , COLOR_YELLOW, COLOR_BLACK);
+
 
 	// Main program
 	int x, y, i, score = 0, act_len = 4;
@@ -45,11 +56,20 @@ int main(int argc, char ** argv){
 	
 	// First print
 	print_map(score);
+
+	attron(COLOR_PAIR(FD));
 	mvprintw(food[1], food[0], "@");
+	attroff(COLOR_PAIR(FD));
+	
+	attron(COLOR_PAIR(SH));
 	mvprintw(snake[0][1], snake[0][0], "X");
+	attroff(COLOR_PAIR(SH));
+	
+	attron(COLOR_PAIR(SB));
 	for(i = 1; i < act_len; i++){
 		mvprintw(snake[i][1], snake[i][0], "O");	
 	}
+	attroff(COLOR_PAIR(SB));
 	
 	// Game loop	
 	while(1){
@@ -128,7 +148,7 @@ int main(int argc, char ** argv){
 			snake[i][0] = snake[i-1][0];
 			snake[i][1] = snake[i-1][1];
 			
-			// Collision withthe snake
+			// Collision with the snake
 			if(snake[i][0] == x && snake[i][1] == y){
 				// You lose
 				end(score);
@@ -145,13 +165,20 @@ int main(int argc, char ** argv){
 		print_map(score);
 
 		// Print the food
+		attron(COLOR_PAIR(FD));
 		mvprintw(food[1], food[0], "@");
+		attroff(COLOR_PAIR(FD));
 
 		// Print the snake
+		attron(COLOR_PAIR(SH));
 		mvprintw(snake[0][1], snake[0][0], "X");
+		attroff(COLOR_PAIR(SH));
+
+		attron(COLOR_PAIR(SB));
 		for(i = 1; i < act_len; i++){
 			mvprintw(snake[i][1], snake[i][0], "O");
 		}
+		attroff(COLOR_PAIR(SB));	
 
 		// Update the window
 		refresh();	
@@ -166,12 +193,18 @@ int main(int argc, char ** argv){
 void print_map(int score){
 	int i;
 
+	attron(COLOR_PAIR(WALL));
 	mvprintw(0,  0, "############## Snake by Davide Fassio ##############");
 	for(i = 1; i < 25; i++){
 		mvprintw(i,  0, "#");
 		mvprintw(i, 51, "#"); 
 	}
-	mvprintw(25, 0, "#################### Score:%4d #################### ", score);
+	mvprintw(25, 0, "####################################################", score);
+	attroff(COLOR_PAIR(WALL));
+
+	attron(COLOR_PAIR(SCO));
+	mvprintw(26, 21, "Score: %3d", score);
+	attroff(COLOR_PAIR(SCO));
 }
 
 // Opening screen
@@ -194,9 +227,11 @@ void opening(){
 // Ending screen
 void end(int score){
 	clear();
+	attron(COLOR_PAIR(SH));
 	mvprintw(10, 21, "Game over!");
 	mvprintw(12, 17, "Your score is = %d", score);
 	mvprintw(14, 14, "Press enter to leave ...");
+	attroff(COLOR_PAIR(SH));	
 	refresh();
 	
 	while(getch() != 10){}
@@ -206,9 +241,11 @@ void end(int score){
 // Win ending screen
 void winend(){
 	clear();
+	attron(COLOR_PAIR(SH));
 	mvprintw(10, 22, "You win!!");
 	mvprintw(12, 16, "Your score is = 1000");
 	mvprintw(14, 14, "Press enter to leave ...");
+	attroff(COLOR_PAIR(SH));
 	refresh();
 
 	while(getch() != 10){}

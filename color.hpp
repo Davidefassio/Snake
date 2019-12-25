@@ -1,3 +1,6 @@
+// License GPL v3.0
+// by Davide Fassio
+
 #ifndef COLOR_H
 #define COLOR_H
 
